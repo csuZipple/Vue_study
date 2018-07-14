@@ -5,11 +5,10 @@
     <title>vue的模拟实现</title>
 </head>
 <body>
-<div id="mvvm-app">
-    <input type="text" v-model="word">
-    <p>{{word}}</p>
-    <button v-on:click="sayHi">change model</button>
-</div>
+    <div id="app">
+        <input type="text" v-model="message">
+        {{ message }}
+    </div>
 </body>
 <script src="./dist/bundle.js"></script>
 <script>

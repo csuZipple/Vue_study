@@ -1,9 +1,8 @@
-import Obverser from "./lib/obverser";
+import Mvvm from "./lib/index"
 
-let obj = {
-    "name":"zipple"
-};
-
-new Obverser(obj);
-
-obj.name = "mr.llw";
+new Mvvm({
+    el: '#app',
+    data: {
+        message: "hello myVue"
+    }
+});

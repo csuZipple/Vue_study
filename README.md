@@ -28,12 +28,32 @@ module.exports = {
 3. 实现一个Watcher，作为连接Observer和Compile的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数，从而更新视图 
 4. mvvm入口函数，整合以上三者
 
+### 模块介绍 
+
+[参考链接](http://www.php.cn/js-tutorial-390322.html)
+#### Observer
+
+>遍历data中的所有属性，同时通过递归的方式遍历这些属性的子属性，通过Object.defineProperty()将这些属性都定义为访问器属性，访问器属性自带get和set方法，通过get和set方法来监听数据变化。
+
+#### Dep
+
+>我们需要消息订阅器来收集所有的订阅者，也就是在这里维护一个列表，当属性的get方法被触发时，需要判断是否要添加订阅者，如果需要就在列表中增加一个订阅者，当set方法被触发时就通知列表中所有的订阅者来做出响应。
+
+#### Watcher
+
+>因为我们是在get函数中判断是否要添加订阅者的，要想把一个订阅者添加到列表中我们就需要在初始化这个订阅者时触发get函数，我们可以在Dep.target上缓存下订阅者，添加成功后再将其去掉就可以了
+
+#### Compile
+
+>compile负责初始化时的编译解析，遍历每一个结点，看哪些结点需要订阅者，也负责后续为订阅者绑定更新函数。 
+
+
 ### 实现Observer.js
-采用ES6语法编写这个文件
+就上面的思路中提到的发布-订阅者模式而言，下面的代码还需要定义一个对象来
 ```javascript
-class Obverser {
+class Observer {
     constructor(obj){
-        this.data = obj;
+        this.data = obj; 
         if (!this.data || typeof this.data !== 'object') return;
         Object.keys(this.data).forEach(key=>{
             console.log(key);
@@ -41,7 +61,7 @@ class Obverser {
         })
     }
      _listen(key, val){
-        new Obverser(val);
+        new Observer(val);
         Object.defineProperty(this.data,key,{
             enumerable:true,
             configurable:false,
@@ -62,5 +82,5 @@ class Obverser {
     }
 }
 
-export default Obverser;
+export default Observer;
 ```
